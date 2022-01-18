@@ -18,8 +18,14 @@ const getFail = (req,res)=>{
     res.render("auth/fail",{title:"Failure"});
 };
 
+const LogOut = (req,res)=>{
+    req.session.destroy();
+    res.redirect("/auth/login");
+};
+
 export default {
     getSignUp,
     getLogIn,
-    getFail
+    getFail,
+    LogOut
 };

@@ -1,9 +1,9 @@
 import {Router} from "express";
+import HomeUtils from "../utils/home/home-utils.js";
+
 const router = Router();
 
-router.get("/home",(req,res)=>{
-    const {email,password,name,address,age,prefix_phone,phone,avatar} = req.user;
-    res.render("common/home.hbs",{title:"Main page",email,password,name,address,age,prefix_phone,phone});
-});
+router.get("/home",HomeUtils.GetHome);
+router.get("/profile",HomeUtils.GetProfile);
 
 export default router;

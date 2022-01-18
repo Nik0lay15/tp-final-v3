@@ -1,8 +1,8 @@
 import {Router} from "express";
+import ErrorUtils from "../utils/error/error-utils.js";
+
 const router = Router();
 
-router.get("/",(req,res)=>{
-    res.render("error/fail",{route:req.baseUrl});
-});
+router.get("/",ErrorUtils.GetError);
 
 export default router;
