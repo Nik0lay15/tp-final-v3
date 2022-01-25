@@ -8,6 +8,7 @@ import handlebars from "express-handlebars";
 import AuthRoute from "../routes/auth-route.js";
 import WrongRoute from "../routes/fail.js";
 import MainRoute from "../routes/main.js";
+import ProductRoute from "../routes/products.js";
 
 dotenv.config({
     path:"./config/.env"
@@ -27,7 +28,7 @@ app.use(session({
             }
         }),
         secret:process.env.SECRETKEY,
-        resave:true,
+        resave:false,
         saveUninitialized:true,
     }
 ));
@@ -41,13 +42,17 @@ app.engine("hbs",handlebars.engine({
     extname:".hbs",
     defaultLayout:"base.hbs",
     layoutsDir:__dirname+"/views/layouts",
-    partialsDir:__dirname+"/views/partials"
+    partialsDir:__dirname+"/views/partials",
 }));
 app.set("views",__dirname+"/views");
 app.set("view engine","hbs");
 
 app.use("/",MainRoute);
 app.use("/auth",AuthRoute);
+app.use("/products",ProductRoute);
+app.post("/buy",(req,res)=>{
+    console.log(req.body);
+});
 app.use("*",WrongRoute);
 
 export default app;

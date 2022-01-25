@@ -4,23 +4,39 @@
       <img src="/logo.png" width="32" height="24" class="d-inline-block align-text-top"><b class="text-white">Ecommerce</b>
     </a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
         <li class="nav-item">
-          <a class="nav-link" href="#" >Home</a>
+          <a class="nav-link" href="/home" >Home</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Profile</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled ">Add product</a>
-        </li>
+        {{#if admin}}
+          <li class="nav-item">
+            <a class="nav-link" href="/products/add">Add product</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/products/delete">Remove product</a>
+          </li>
+        {{/if}}
+      </ul>
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ">
         <li class="nav-item">
           <a class="nav-link" href="/profile">Hello {{name}}!</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/auto/logout">Logout</a>
+          <a class="nav-link" href="/auth/logout">Logout</a>
         </li>
       </ul>
     </div>
   </div>
 </nav>
+
+<form action="/buy" method="post">
+  {{#each products}}
+      <h4>{{name}}</h4>
+      <h5>{{description}}</h5>
+      <b>{{price}}</b>
+      <b>{{stock}}</b>
+      <img src={{img}}>
+      <input type="checkbox" value={{code}}>
+  {{/each}}
+  <input type="submit" value="Buy">
+</form>

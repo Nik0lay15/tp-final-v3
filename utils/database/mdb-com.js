@@ -12,10 +12,11 @@ class MongoCommand {
 
     async Connection(){
         try{
-            await mongoose.connect(process.env.MONGODB,{
-                useNewUrlParser:true,
-                useUnifiedTopology:true,
-                serverSelectionTimeoutMS:1000,
+            mongoose.connect(process.env.MONGODB, {
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+                serverSelectionTimeoutMS: 1000,
+                maxPoolSize: 5,
             });
             console.log(`Connection to base ${dat.format(new Date(),"DD/MMMM/YYYY")}`);
         }catch(error){
@@ -38,11 +39,10 @@ class MongoCommand {
         try{
             await this.Connection();
             const user_search = await models.UserModel.findOne({email:id});
-            cb(user_search);
+            await cb(user_search);
         }catch(error){
             console.log(error);
         }
-        await mongoose.connection.close();
     }
 
     async InsertUser(email,password,name,address,age,phone_prefix,phone,cb){
@@ -63,8 +63,7 @@ class MongoCommand {
                     phone:phone,
                     admin:false,
                 });
-                console.log("User insert successfull");
-                const new_user = new models.UserModel({
+                const new_user = await new models.UserModel({
                     "email":email,
                     "password":pass_hash,
                     "name":name,
@@ -74,7 +73,7 @@ class MongoCommand {
                     "phone":phone,
                     "admin":false,
                 });
-                await new_user.save((error)=>{
+                new_user.save((error)=>{
                     if(error) console.log(error);
                 });
                 cb(new_user);
@@ -82,7 +81,6 @@ class MongoCommand {
         }catch(error){
             console.log(error);
         }
-        await mongoose.connection.close();
     }
     
     async CheckPassword(email,password,cb){
@@ -103,8 +101,57 @@ class MongoCommand {
         }catch(error){
             console.log(error);
         }
-        await mongoose.connection.close();
+    }
+
+    async ChangeAvatar(filename,email){
+        try{
+            await this.Connection();
+            await models.UserModel.updateOne({email:email},{$set:{avatar:filename}})
+        }catch(error){
+            console.log(error);
+        }
+    }   
+
+    async ReadProducts(cb){
+        try{
+            await this.Connection();
+            const product_list = await models.ProductModel.find({}).lean();
+            cb(product_list);
+        }catch(error){
+            console.log(error)
+        }
+    }
+
+    async AddProduct(payload){
+        try{
+            await this.Connection();
+            const {id,timestamp,name,description,code,img,price,stock} = payload;
+            await models.ProductModel.insertMany({
+                id:id,
+                timestamp:timestamp,
+                name:name,
+                description:description,
+                code:code,
+                img:img,
+                price:price,
+                stock:stock
+            });
+        }catch(error){  
+            console.log(error);
+        }
+    }
+
+    async DeleteProduct(code){
+        console.log(mongoose.connections.length);
+        try{
+            await this.Connection();
+            await models.ProductModel.deleteOne({code:code});
+        }catch(error){
+            console.log(error);
+        }
     }
 }
 
-export default MongoCommand;
+const db = new MongoCommand();
+
+export default db;

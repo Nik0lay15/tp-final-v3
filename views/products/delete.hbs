@@ -29,17 +29,12 @@
   </div>
 </nav>
 
-<img src={{avatar}}>
-<h5>Change avatar</h5>
-<form action="/profile/avatar" method="post" enctype="multipart/form-data">
-  <input type="file" name="avatar-form">
-  <input type="submit" value="Upload">
-</form>
-<h3>{{email}}</h3>
-<h3>{{password}}</h3>
-<h3>{{name}}</h3>
-<h3>{{address}}</h3>
-<h3>{{age}}</h3>
-<h3>{{prefix_phone}}</h3>
-<h3>{{phone}}</h3>
-<a href="/auth/logout">Logout</a>
+{{#each products}}
+    <form action="/products/delete/{{code}}" method="post">
+        <h4>{{name}}</h4>
+        <h5>{{description}}</h5>
+        <b>{{price}}</b>
+        <b>{{stock}}</b>
+        <input type="submit" class="btn btn-danger" value="Delete">
+    </form>
+{{/each}}

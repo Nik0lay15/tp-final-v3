@@ -12,8 +12,22 @@ const UserSchema = mongoose.Schema({
     avatar:{type:String,default:"default.png"}
 });
 
+const ProductSchema = mongoose.Schema({
+    id:{type:String,required:true},
+    timestamp:{type:Number,required:true},
+    name:{type:String,required:true},
+    description:{type:String,required:true},
+    code:{type:String,required:true},
+    img:{type:String,required:true},
+    price:{type:Number,required:true},
+    stock:{type:Number,required:true}
+});
+
 const UserModel = mongoose.model("users",UserSchema);
+const ProductModel = mongoose.model("products",ProductSchema);
+
 
 export default {
-    UserModel
+    UserModel,
+    ProductModel
 };
